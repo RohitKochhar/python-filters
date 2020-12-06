@@ -8,15 +8,20 @@ import numpy as np
 # ----- Time-averaging filter --------------------
 class TimeAveragingFilter():
     a_Weights      = [] # Placeholder
+    a_Data         = [] # Placeholder
     # Constructor
-    def __init__(self, a_Weights, a_Data):
+    def __init__(self, a_Weights, a_Data=[], b_ValidateInputs = False):
         # This class takes in an array of weights
         # in the form of [0.4, 0.3, 0.2, 0.1] which
         # would average the signal as 0.4*x_n + 0.3*x_(n-1) + 0.2*x_n-2 ...
         # these weights must be positive and between 0 and 1
-        self.a_Weights      =   self.ValidateWeights(a_Weights)
-        # We also need to provide an array of data
-        self.a_Data         =   self.ValidateData(a_Data)
+        if b_ValidateInputs:
+            self.a_Weights      =   self.ValidateWeights(a_Weights)
+            # We also need to provide an array of data
+            self.a_Data         =   self.ValidateData(a_Data)
+        if b_ValidateInputs == False:
+            self.a_Weights = a_Weights
+            self.a_Data = a_Data
 
     def ValidateWeights(self, a_Weights):
         # Check that our sum must equal 1
@@ -84,11 +89,10 @@ class TimeAveragingFilter():
 
             a_ResultSignal[n] = i_AveragedData
         return a_ResultSignal
-            
-
-
-a_InputSignal = open("test-inputs/linear.txt", 'r').readlines()
-
-o_TestFilter = TimeAveragingFilter(a_Weights = [0.8, 0.2], a_Data = a_InputSignal)
-
-print(o_TestFilter.FrontPropogateFilter())
+    
+    def Process(self, i_Data):
+        i_AveragedValue = self.a_Weights[0] * i_Data
+        for i in range(1, len(self.a_Weights)):
+            if len(self.a_Data) - i > 0:
+                i_AveragedValue += self.a_Weights[i] * self.a_Data[-i]
+        self.a_Data.append(i_AveragedValue)
