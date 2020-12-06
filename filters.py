@@ -10,7 +10,7 @@ class TimeAveragingFilter():
     a_Weights      = [] # Placeholder
     a_Data         = [] # Placeholder
     # Constructor
-    def __init__(self, a_Weights, a_Data=[], b_ValidateInputs = False):
+    def __init__(self, a_Weights, a_Data=[], b_ValidateInputs = True):
         # This class takes in an array of weights
         # in the form of [0.4, 0.3, 0.2, 0.1] which
         # would average the signal as 0.4*x_n + 0.3*x_(n-1) + 0.2*x_n-2 ...
